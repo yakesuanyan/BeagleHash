@@ -15,7 +15,7 @@ state, the block size for reads, and the size of the final hash.
 | Phat4 | 32 | 96 | 128 | 32 |
 | SBOX | 64 | 128 | 524480 | 64 |
 
-BeagleHash is named in honor of the the H.M.S. Beagle, the ship
+BeagleHash is named in honor of the the HMS *Beagle*, the ship
 that carried Charles Darwin to the Galapogos Islands. Zaphod is named
 after the character from *The Hitchhiker's Guide to the Galaxy,* and is
 also a play on the fact that Microsoft has patented a hash called "Marvin."
@@ -37,7 +37,7 @@ contexts where there is a single seed used to hash many keys,
 including ones from untrusted sources, and where there may be
 "leakage" of details about how the hash behaves. In particular, one
 of the assumptions of the hash functions contained here is that
-they will be *rarely* seeded, but that we will hash many times
+they will be **rarely** seeded, but that we will hash many times
 with the same seed.
 
 ## BeagleHash
@@ -105,8 +105,8 @@ is then used for all subsequent hashing requirements: from internal purposes
 like namespace management to application level logic like hashing arbitrary
 user input, for example building a hash of the arguments to a web request. While
 the hash values generated are considered "private" to the process (and transient
-to that process), information about the hash function being used can and often does
-leak in the form of printing out the keys of a hash in native key order.
+to that process), information about the hash function being used would easily leak
+without Perl's "Hash Traversal Randomization" feature.
 Another key point here is that the hash table size is variable. In many of
 the tables, only a few bits (usually the low bits) of the hash are actually used.
 
@@ -120,20 +120,29 @@ we have to make seed-discovery attacks impractical.
 
 ### Universal multicollision attacks
 
-The most serious type of collision attack is the "multi-collision" attack, where
-it is possible to construct colliding keys *without knowing the seed* of the hash.
-Hashes which are based around the 64 bit Intel CRC32 intrinsic often suffer
-from this problem. It takes a few seconds to find a CRC32 collision, and once you
+A universal (or seed-independent) collision occurs when two different keys have
+equal hash values **regardless of the seed.** A multicollision attack is when many
+keys with equal hash values can be generated for **little more computational cost**
+than generating two keys with equal hash values. Multicollision attacks tend to be
+far more serious than ordinary collision attacks: a typical personal computer can
+find thousands of colliding keys within milliseconds in the case of a multicollision,
+while an "ordinary" collision attack (e.g. SHA-1) might take many years to find
+just two colliding keys on the same computer. 
+
+Sadly, multicollision attacks tend to create universal collisions, and universal
+collisions tend to be found as part of multicollisions. Hashes which are based around
+the 64 bit Intel CRC32 intrinsic often suffer from this problem.
+It takes a few seconds to find a CRC32 collision, and once you
 have that, you can manufacture arbitrary numbers of keys which collide. Even if
 the seed changes, and thus the hash value produced changes, all the keys will
-still collide. There are other variants to this, for instance some hashes have
-the property that there is a key K such that H(P)=H(PK), or have the associative
+still collide. There are other variants to this: for instance, some hashes have
+the property that there is a key K such that H(P)=H(PK) or the associative
 property such that H(AB)=H(BA). Any such weaknesses are a fatal blow to a hash
 function that needs to be robust to untrusted input data.
 
-At this time I do now know of any multi-collision attacks on the hash functions
-in this package. I believe that they are by design robust to such attacks, always
-mixing the length of the key into the state during hashing, and of sufficient
+At this time, I do not know of any multicollision attacks on the hash functions
+in this package. I believe that they are *by design* robust to such attacks, always
+mixing the length of the key into the state during hashing, and they are of sufficient
 complexity and construction that such attacks are unlikely.
 
 ### Brute-force attacks
@@ -159,10 +168,10 @@ least 64 bits, if not longer.
 
 All of the hash functions in this package support a seed larger than 64 bits.
 
-### Solver Attacks
+### Solver attacks
 
 If an attacker knows the hash function being attacked (and even if they don't to a
-certain extent), they can use an SMT solver to compute the seed from a set of input/output pairs.
+certain extent), they can use an *SMT solver* to compute the seed from a set of input/output pairs.
 This means that the complexity of the hash function must be sufficient to make
 solving the hash impractical. Modern solver technology is very advanced and can
 make short order of an insufficiently complex hash function.
@@ -172,7 +181,7 @@ say that the solver resistance of the hash function is inversely proportional to
 hash function's speed, but obviously the relative sizes of the seed, state and hash
 will play a big role. This needs further study.
 
-## Relatively Speaking
+## Relatively speaking...
 
 All of these hash functions use less state, or use less complex mix functions, than
 even SipHash 1-3. On the other hand, they are faster than
