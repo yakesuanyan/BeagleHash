@@ -3,7 +3,7 @@
 This is BeagleHash and friends: a family of hash functions developed
 using *genetic algorithm* techniques. Each hash function has a different
 set of trade offs, primarily relating to the size of the seed, the
-run time state size of the hash, the method of seeding the hashes'
+run time state size of the hash, the method of seeding the hash's
 state, the block size for reads, and the size of the final hash.
 
 | Hash | WordBits | SeedBits | StateBits | HashBits |
@@ -15,15 +15,15 @@ state, the block size for reads, and the size of the final hash.
 | Phat4 | 32 | 96 | 128 | 32 |
 | SBOX | 64 | 128 | 524480 | 64 |
 
-BeagleHash is named in honor of the the HMS *Beagle*, the ship
+BeagleHash is named in honor of the HMS *Beagle*, the ship
 that carried Charles Darwin to the Galapogos Islands. Zaphod is named
-after the character from *The Hitchhiker's Guide to the Galaxy,* and is
+after the character from *The Hitchhiker's Guide to the Galaxy,* and it is
 also a play on the fact that Microsoft has patented a hash called "Marvin."
-StadtX is a hash function inspired by the MetroHash family of hashes,
-and was named accordingly, "stadt" being the German word for city.
+StadtX is a hash function inspired by the MetroHash family of hashes
+and was named accordingly ("stadt" being the German word for city).
 Phat4 needs a new name.
 
-SBOX is named after how it works, which is substitution box (compare tabulation) hashing.
+SBOX is named after how it works, which is substitution box (tabulation) hashing.
 SBOX is a toy, designed to demonstrate how "perfect unbreakable hashing" might behave.
 It hashes by looking up a random 64 bit value for each input byte (and then switches to
 Zaphod64-like hashing after 32 bytes). The purpose is purely for testing. I do not
@@ -32,12 +32,12 @@ recommend you use it.
 # What is it for
 
 The primary intention of the hash functions contained in this
-repository is for use in scripting languages such as Perl and other
+repository is for use in scripting languages (such as Perl) and other
 contexts where there is a single seed used to hash many keys,
 including ones from untrusted sources, and where there may be
 "leakage" of details about how the hash behaves. In particular, one
 of the assumptions of the hash functions contained here is that
-they will be **rarely** seeded, but that we will hash many times
+they will be **rarely** seeded, but we will hash many times
 with the same seed.
 
 ## BeagleHash
@@ -85,9 +85,9 @@ quality.
 
 # Hash function security
 
-Security for a hash function is a complex matter. Many contexts do not
+The security of a hash function is a complex matter. Many contexts do not
 rely on security. If you are hashing the words in an "actual" dictionary,
-or hashing pointer addresses, then you probably don't need to worry about
+or hashing pointer addresses, you probably don't need to worry about
 the security of that hash function and can focus on speed and suitability
 to the data being hashed. On the other hand, if you are using hashing for
 signing messages, then you really need to worry about using an academically
@@ -111,7 +111,7 @@ Another key point here is that the hash table size is variable. In many of
 the tables, only a few bits (usually the low bits) of the hash are actually used.
 
 Since we have to supporting hashing arbitrary user data, we have to assume that
-sometimes that data may be hostile, and that someone may be setting up a collision
+the data may be hostile, and that someone may be setting up a collision
 attack on the hash function. We must ensure that our hash function is
 sufficiently robust to make collision attacks impractical, which in turn means
 we have to make seed-discovery attacks impractical.
@@ -126,8 +126,8 @@ keys with equal hash values can be generated for **little more computational cos
 than generating two keys with equal hash values. Multicollision attacks tend to be
 far more serious than ordinary collision attacks: a typical personal computer can
 find thousands of colliding keys within milliseconds in the case of a multicollision,
-while an "ordinary" collision attack (e.g. SHA-1) might take many years to find
-just two colliding keys on the same computer. 
+while an "ordinary" collision attack (e.g. SHA-1) might take many years just to find
+two colliding keys on the same computer. 
 
 Sadly, multicollision attacks tend to create universal collisions, and universal
 collisions tend to be found as part of multicollisions. Hashes which are based around
@@ -161,7 +161,7 @@ seed secret.
 ### Brute-force
 
 If the seed is small enough, we can brute force the hash function and simply
-try every seed and see what hash (or key order) we get. Note the hash size doesnt
+try every seed and see what hash (or key order) we get. Note the hash size doesn't
 matter much here: if the seed is 32 bits, the hash function can be brute forced
 in short order. This means that any decent hash function needs to have a seed of at
 least 64 bits, if not longer.
@@ -169,6 +169,9 @@ least 64 bits, if not longer.
 All of the hash functions in this package support a seed larger than 64 bits.
 
 ### Solver attacks
+
+> This section is out of date. A separate markdown document will likely be created
+> for information on solver attacks and other specialized attacks.
 
 If an attacker knows the hash function being attacked (and even if they don't to a
 certain extent), they can use an *SMT solver* to compute the seed from a set of input/output pairs.
@@ -202,7 +205,7 @@ express license after contacting the author.
 # Author
 
 Yves Orton wrote and ran the software (currently not included in this
-package) that evolved the internals used by BeagleHash, and wrote
+package) that evolved the internals used by BeagleHash, as well as writing
 the "skeleton" that the genetic-algorithm "filled in."
 
 Yakesuanyan revised the documentation and is working on further analysis
@@ -214,11 +217,9 @@ The author would like to thank the following people who have one way or
 another influenced the development of this software:
 
 * Damian Gryski - A smart cookie who has interest in this area and who
-                    has helped with some of the analysis.
+                    has helped with earlier analysis.
 * Brett Mulvey  - Author of http://papa.bretmulvey.com/post/124027987928/hash-functions
 * JP Aumasson "veorq" - One of the authors of SipHash which has been very
                     influential in how this function was structured.
-* Ryan Bastic   - Porting, Doc fixes, actually building stuff, etc.
-* Larry Wall    - Author of Perl, where I got my chops, and why I started
-                    on this in the first place.
-
+* Ryan Bastic   - Porting, past doc fixes, actually building stuff, etc.
+* Larry Wall    - Author of Perl, which inspired Yves Orton to create these functions.
