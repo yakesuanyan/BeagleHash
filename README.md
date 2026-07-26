@@ -168,21 +168,12 @@ least 64 bits, if not longer.
 
 All of the hash functions in this package support a seed larger than 64 bits.
 
-### Solver attacks
+### Specialized attacks
 
-> This section is out of date. A separate markdown document will likely be created
-> for information on solver attacks and other specialized attacks.
-
-If an attacker knows the hash function being attacked (and even if they don't to a
-certain extent), they can use an *SMT solver* to compute the seed from a set of input/output pairs.
-This means that the complexity of the hash function must be sufficient to make
-solving the hash impractical. Modern solver technology is very advanced and can
-make short order of an insufficiently complex hash function.
-
-I do not know the solver status of these hash functions. If I had to guess, I would
-say that the solver resistance of the hash function is inversely proportional to the
-hash function's speed, but obviously the relative sizes of the seed, state and hash
-will play a big role. This needs further study.
+More specialized kinds of attacks can potentially break the hash function
+faster than brute force, even in the absence of a multicollision. However,
+I have [concluded](other_attacks.md) that such attacks are not yet a
+major concern for the intended applications of BeagleHash.
 
 ## Relatively speaking...
 
