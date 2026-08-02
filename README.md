@@ -26,8 +26,9 @@ Phat4 needs a new name.
 SBOX is named after how it works, which is substitution box (tabulation) hashing.
 SBOX is a toy, designed to demonstrate how "perfect unbreakable hashing" might behave.
 It hashes by looking up a random 64 bit value for each input byte (and then switches to
-Zaphod64-like hashing after 32 bytes). The purpose is purely for testing. I do not
-recommend you use it.
+Zaphod64-like hashing after 32 bytes). Note that tabulation hashing is not actually
+unbreakable; in fact, it is likely to have inferior resistance to specialized attacks,
+so I do not regard it as part of the BeagleHash family.
 
 # What is it for
 
